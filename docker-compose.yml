@@ -45,6 +45,8 @@ services:
     ports: 
       - 8000:8000
       - 8080:8080
+    volumes:
+      - $PWD/nifi-templates/:/opt/nifi/nifi-current/conf/templates
   crypto:
     image: crypto-pysim
     hostname: crypto
@@ -58,7 +60,9 @@ services:
     hostname: pyspark
     container_name: pyspark
     ports:
-      - 8880:8888
+      - 8888:8888
+    volumes:
+     - $PWD/spark-notebooks/:/home/jovyan/
   cassandra:
     image: cassandra
     hostname: cassandra
