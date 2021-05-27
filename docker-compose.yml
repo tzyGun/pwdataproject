@@ -72,4 +72,17 @@ services:
       - 9042:9042
     volumes: 
       - ~/cassandra_volume:/var/lib/cassandra
+  frontend:
+    image: frontend-crypto
+    hostname: frontend
+    container_name: frontend
+    ports: 
+      - 3000:3000
+  backend:
+    image: backend-crypto
+    hostname: backend
+    container_name: backend
+    ports: 
+      - 3001:3001
+
 

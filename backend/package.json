@@ -1,0 +1,20 @@
+{
+  "name": "cointracker-backend",
+  "version": "1.0.0",
+  "description": "Backend for receving data from Bigdata Pipeline",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sylwester Denko",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ws": "^7.4.6"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.12",
+    "@types/ws": "^7.4.4",
+    "typescript": "^4.2.4"
+  }
+}
