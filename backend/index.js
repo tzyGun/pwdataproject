@@ -1,36 +1,17 @@
 "use strict";
-
-const serverPort = 3001,
-    http = require("http"),
-    express = require("express"),
-    app = express(),
-    server = http.createServer(app),
-    WebSocket = require("ws"),
-    websocketServer = new WebSocket.Server({ server });
-
-//when a websocket connection is established
-websocketServer.on('connection', (webSocketClient) => {
-    //send feedback to the incoming connection
-    webSocketClient.send('{ "connection" : "ok"}');
-
-    //when a message is received
-    webSocketClient.on('message', (message) => {
-
-        //for each websocket client
-        websocketServer
-            .clients
-            .forEach(client => {
-                //send the client the current message
-                client.send(`{ "message" : ${message} }`);
-            });
-    });
+Object.defineProperty(exports, "__esModule", { value: true });
+var express = require("express");
+var http = require("http");
+var dotenv = require("dotenv");
+var websocket_server_1 = require("./websocket/websocket-server");
+var config = dotenv.config();
+var app = express();
+//initialize a simple http server
+var server = http.createServer(app);
+var wss = new websocket_server_1.default(server);
+wss.init().then(function () { return console.log('Websocket initialized'); });
+//initialize the WebSocket server instance
+//start our server
+server.listen(process.env.PORT, function () {
+    console.log("Server started on port " + server.address().port + " :)");
 });
-
-//start the web server
-server.listen(serverPort, () => {
-    console.log(`Websocket server started on port ` + serverPort);
-});
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})

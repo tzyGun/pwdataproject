@@ -4,12 +4,16 @@
   "description": "Backend for receving data from Bigdata Pipeline",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "compile": "tsc --target ES5 index.ts"
   },
   "author": "Sylwester Denko",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "kafkajs": "^1.15.0",
     "ws": "^7.4.6"
   },
   "devDependencies": {
