@@ -39,12 +39,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var http = require("http");
 var dotenv = require("dotenv");
-var kafka_client_factory_1 = require("./kafka/kafka-client.factory");
 var path = require("path");
+var kafkajs_1 = require("kafkajs");
 var app = express();
 var config = dotenv.config();
-var consumer = kafka_client_factory_1.default.createKafkaConsumer();
-var main = function (socket) { return __awaiter(void 0, void 0, void 0, function () {
+var kafka = new kafkajs_1.Kafka({
+    brokers: [process.env.KAFKA_BOOTSTRAP_SERVER],
+});
+var consumer = kafka.consumer({
+    groupId: process.env.GROUP_ID
+});
+var main = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var socketG;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, consumer.connect()];
@@ -57,20 +63,46 @@ var main = function (socket) { return __awaiter(void 0, void 0, void 0, function
                     })];
             case 2:
                 _a.sent();
-                console.log("subscribe");
+                io.on('connection', function (socket) { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        console.log('Connected');
+                        socketG = socket;
+                        socket.emit('message-from-server', {
+                            message: 'Hello'
+                        });
+                        socket.on('disconnect', function () { return __awaiter(void 0, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, consumer.stop()];
+                                    case 1:
+                                        _a.sent();
+                                        consumer.disconnect().then(function () { return console.log('consumer closed'); });
+                                        console.log('Client disconnected');
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        return [2 /*return*/];
+                    });
+                }); });
                 return [4 /*yield*/, consumer.run({
                         eachMessage: function (_a) {
                             var topic = _a.topic, partition = _a.partition, message = _a.message;
                             return __awaiter(void 0, void 0, void 0, function () {
+                                var payload;
                                 return __generator(this, function (_b) {
-                                    console.log('Received message', {
-                                        topic: topic,
-                                        partition: partition,
-                                        key: message.key,
-                                        value: message.value.toString()
-                                    });
-                                    socket.emit('message-from-server', {
-                                        message: 'consumer'
+                                    payload = {
+                                        message: message.value.toString()
+                                    };
+                                    // console.log('Received message', {
+                                    //     topic,
+                                    //     partition,
+                                    //     key: message.key,
+                                    //     value: message.value!.toString()
+                                    // })
+                                    console.log(payload);
+                                    socketG.emit('message-from-server', {
+                                        payload: payload
                                     });
                                     return [2 /*return*/];
                                 });
@@ -79,12 +111,33 @@ var main = function (socket) { return __awaiter(void 0, void 0, void 0, function
                     })];
             case 3:
                 _a.sent();
-                console.log("run");
                 return [2 /*return*/];
         }
     });
 }); };
-console.log('main');
+main().catch(function (error) { return __awaiter(void 0, void 0, void 0, function () {
+    var e_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.error(error);
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, consumer.disconnect()];
+            case 2:
+                _a.sent();
+                return [3 /*break*/, 4];
+            case 3:
+                e_1 = _a.sent();
+                console.error('Failed to gracefully disconnect consumer', e_1);
+                return [3 /*break*/, 4];
+            case 4:
+                process.exit(1);
+                return [2 /*return*/];
+        }
+    });
+}); });
 //initialize a simple http server
 var server = http.createServer(app);
 server.listen(process.env.PORT, function () {
@@ -96,48 +149,4 @@ var io = require('socket.io')(server, {
     cors: {
         origin: '*',
     }
-});
-io.on('connection', function (socket) {
-    console.log('Connected');
-    main(socket).catch(function (error) { return __awaiter(void 0, void 0, void 0, function () {
-        var e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    console.error(error);
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, consumer.disconnect()];
-                case 2:
-                    _a.sent();
-                    return [3 /*break*/, 4];
-                case 3:
-                    e_1 = _a.sent();
-                    console.error('Failed to gracefully disconnect consumer', e_1);
-                    return [3 /*break*/, 4];
-                case 4:
-                    process.exit(1);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    socket.emit('message-from-server', {
-        message: 'Hello'
-    });
-    socket.on('message-from-client', function (data) {
-        console.log('Event triggered by client', { data: data });
-    });
-    socket.on('disconnect', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, consumer.stop()];
-                case 1:
-                    _a.sent();
-                    consumer.disconnect().then(function () { return console.log('consumer closed'); });
-                    console.log('Client disconnected');
-                    return [2 /*return*/];
-            }
-        });
-    }); });
 });

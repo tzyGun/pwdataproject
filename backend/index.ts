@@ -5,26 +5,58 @@ import * as dotenv from 'dotenv'
 import KafkaClientFactory from './kafka/kafka-client.factory';
 import path = require('path')
 import { Socket } from 'socket.io';
+import { Consumer, Kafka } from 'kafkajs'
+
+
 const app = express();
 const config = dotenv.config()
+const kafka = new Kafka({
+    brokers: [process.env.KAFKA_BOOTSTRAP_SERVER!],
+})
 
-const consumer = KafkaClientFactory.createKafkaConsumer()
+const consumer = kafka.consumer({
+    groupId: process.env.GROUP_ID!
+})
+
 const main = async () => {
     await consumer.connect()
-    console.log("connect")
 
     await consumer.subscribe({
         topic: process.env.TOPIC!,
         fromBeginning: true
     })
+    let socketG: Socket
+    io.on('connection', async (socket: Socket) => {
+        console.log('Connected');
+        socketG = socket
+        socket.on('disconnect', async () => {
+            await consumer.stop()
+            consumer.disconnect().then(()=> console.log('consumer closed'))
+            console.log('Client disconnected');
+        });
+    });
+
+    await consumer.run({
+        eachMessage: async ({ topic, partition, message }) => {
+            const payload = {
+                message: message.value!.toString()
+            }
+            socketG.emit('message-from-server', {
+                payload
+            })
+        }
+    })
 }
 
-console.log('main')
-
-
-
-
-
+main().catch(async error => {
+    console.error(error)
+    try {
+        await consumer.disconnect()
+    } catch (e) {
+        console.error('Failed to gracefully disconnect consumer', e)
+    }
+    process.exit(1)
+})
 
 //initialize a simple http server
 const server = http.createServer(app)
@@ -40,48 +72,5 @@ const io = require('socket.io')(server, {
     cors: {
         origin: '*',
     }
-});
-
-main().catch(async error => {
-    console.error(error)
-    try {
-        await consumer.disconnect()
-    } catch (e) {
-        console.error('Failed to gracefully disconnect consumer', e)
-    }
-    process.exit(1)
-})
-
-const run = async (socket: Socket)=> {
-    await consumer.run({
-        eachMessage: async ({ topic, partition, message }) => {
-            console.log('Received message', {
-                topic,
-                partition,
-                key: message.key,
-                value: message.value!.toString()
-            })
-            socket.emit('message-from-server', {
-                message: 'consumer'
-            })
-        }
-    })
-}
-
-
-io.on('connection', async (socket: Socket) => {
-    console.log('Connected');
-
-    socket.emit('message-from-server', {
-        message: 'Hello'
-    })
-
-    run(socket)
-
-    socket.on('disconnect', async () => {
-        await consumer.stop()
-        consumer.disconnect().then(()=> console.log('consumer closed'))
-        console.log('Client disconnected');
-    });
 });
 

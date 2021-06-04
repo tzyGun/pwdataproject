@@ -6,9 +6,12 @@ export interface RowData {
 
 
 export interface Coin {
+    volume24h?: number;
     rank: Number;
     name: string;
     amount: Number;
     sparkLine: Array<number>
-    coinIconUrl: string;
+    iconUrl: string;
+    symbol: string;
+    change: number;
 }

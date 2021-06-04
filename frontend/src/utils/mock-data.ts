@@ -10,19 +10,14 @@ export default class MockData {
             amount: 10,
             name: "bitcoin",
             sparkLine: parseSparkLine(MockData.getMockSparkLines()),
-            coinIconUrl: 'https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg'
-        },
-        {
-            rank: 2,
-            amount: 15,
-            name: "bitcoin",
-            sparkLine: [],
-            coinIconUrl: 'https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg'
+            iconUrl: 'https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg',
+            symbol: 'BTC',
+            change: -2.93232
         }]
         return coins;
     };
 
-    static getMockSparkLines = () => {
+    private static getMockSparkLines = () => {
         return ["48121.48483135035029351326",
             "47680.53858679600719235244",
             "48363.56523278616068368839",
