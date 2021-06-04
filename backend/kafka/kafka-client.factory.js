@@ -8,6 +8,7 @@ var KafkaClientFactory = /** @class */ (function () {
         var kafka = new kafkajs_1.Kafka({
             brokers: [process.env.KAFKA_BOOTSTRAP_SERVER],
         });
+        console.log(process.env.GROUP_ID);
         return kafka.consumer({
             groupId: process.env.GROUP_ID
         });

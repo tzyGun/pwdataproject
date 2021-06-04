@@ -1,0 +1,33 @@
+---
+version: '3.5'
+services:
+  nifi:
+    image: apache/nifi
+    hostname: nifi
+    container_name: nifi
+    depends_on: 
+      - broker
+    ports: 
+      - 8000:8000
+      - 8080:8080
+  crypto:
+    image: crypto-pysim
+    hostname: crypto
+    container_name: crypto
+    depends_on: 
+      - broker
+    ports: 
+      - 5000:5000
+  pyspark:
+    image: jupyter/pyspark-notebook
+    hostname: pyspark
+    container_name: pyspark
+    ports:
+      - 8888:8888
+  cassandra:
+    image: cassandra
+    hostname: cassandra
+    container_name: cassandra
+    ports: 
+      - 7000:7000
+      - 9042:9042
