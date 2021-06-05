@@ -19,7 +19,7 @@ const WebSocketContextProvider = (child: any) => {
   const addCoin = (newCoin: Coin) => setCoins((coins) => [...coins, newCoin]);
 
   useEffect(() => {
-    const socket = socketClient("http://localhost:3001");
+    const socket = socketClient('http://localhost:30002');
     socket.on("message-from-server", ({payload}) => {
       if (payload) {
         const { message } = payload;
