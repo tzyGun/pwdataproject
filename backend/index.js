@@ -49,37 +49,32 @@ var kafka = new kafkajs_1.Kafka({
 var consumer = kafka.consumer({
     groupId: process.env.GROUP_ID
 });
+var socketConnected = false;
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var socketG;
+    var socketSessionInstance;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, consumer.connect()];
             case 1:
                 _a.sent();
-                console.log("connect");
+                console.info("Kafka consumer connected to cluster, broker address " + process.env.KAFKA_BOOTSTRAP_SERVER);
                 return [4 /*yield*/, consumer.subscribe({
                         topic: process.env.TOPIC,
                         fromBeginning: true
                     })];
             case 2:
                 _a.sent();
+                console.info("Kafka consumer subscribed to " + process.env.TOPIC);
                 io.on('connection', function (socket) { return __awaiter(void 0, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        console.log('Connected');
-                        socketG = socket;
-                        socket.emit('message-from-server', {
-                            message: 'Hello'
-                        });
+                        console.info("Socket server connected with client with status: " + socket.connected);
+                        socketSessionInstance = socket;
+                        socketConnected = true;
                         socket.on('disconnect', function () { return __awaiter(void 0, void 0, void 0, function () {
                             return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, consumer.stop()];
-                                    case 1:
-                                        _a.sent();
-                                        consumer.disconnect().then(function () { return console.log('consumer closed'); });
-                                        console.log('Client disconnected');
-                                        return [2 /*return*/];
-                                }
+                                console.info("Socket server disconnected gracefully status: " + socket.connected);
+                                socketConnected = false;
+                                return [2 /*return*/];
                             });
                         }); });
                         return [2 /*return*/];
@@ -90,20 +85,19 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                             var topic = _a.topic, partition = _a.partition, message = _a.message;
                             return __awaiter(void 0, void 0, void 0, function () {
                                 var payload;
-                                return __generator(this, function (_b) {
+                                var _b;
+                                return __generator(this, function (_c) {
                                     payload = {
+                                        topic: topic,
+                                        partition: partition,
+                                        key: (_b = message.value) === null || _b === void 0 ? void 0 : _b.toString(),
                                         message: message.value.toString()
                                     };
-                                    // console.log('Received message', {
-                                    //     topic,
-                                    //     partition,
-                                    //     key: message.key,
-                                    //     value: message.value!.toString()
-                                    // })
-                                    console.log(payload);
-                                    socketG.emit('message-from-server', {
-                                        payload: payload
-                                    });
+                                    if (socketConnected) {
+                                        socketSessionInstance.emit('message-from-server', {
+                                            payload: payload
+                                        });
+                                    }
                                     return [2 /*return*/];
                                 });
                             });

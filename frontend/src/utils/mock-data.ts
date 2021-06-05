@@ -7,7 +7,7 @@ export default class MockData {
         }
         const coins: Array<Coin> = [{
             rank: 1,
-            amount: 10,
+            price: 10,
             name: "bitcoin",
             sparkLine: parseSparkLine(MockData.getMockSparkLines()),
             iconUrl: 'https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg',

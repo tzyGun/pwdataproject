@@ -17,8 +17,8 @@ const Table = () => {
         <table className="table-auto bg-gray-200 rounded-xl p-8 table">
           <TableHeader />
           <tbody>
-            {coins.map((coin: Coin) => (
-              <TableRow coin={coin} />
+            {coins.map((coin: Coin, index:number) => (
+              <TableRow key={index} coin={coin} />
             ))}
           </tbody>
         </table>

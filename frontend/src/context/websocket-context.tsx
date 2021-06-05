@@ -28,7 +28,7 @@ const WebSocketContextProvider = (child: any) => {
         coins.push({
           rank: data.rank,
           name: data.name,
-          amount: data.amount,
+          price: data.price,
           sparkLine: [],
           iconUrl: "",
           change: data.change,

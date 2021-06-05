@@ -11,7 +11,7 @@ const TableRow = (props: TableRowProps) => {
     <tr>
       <td>{props.coin.rank}</td>
       <td><InlineIcon coin={props.coin}/></td>
-      <td>{props.coin.amount}</td>
+      <td>{props.coin.price}</td>
       <td><SparkLine coin={props.coin}/></td>
     </tr>
   );
