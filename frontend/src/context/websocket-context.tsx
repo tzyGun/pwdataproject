@@ -19,27 +19,26 @@ const WebSocketContextProvider = (child: any) => {
   const addCoin = (newCoin: Coin) => setCoins((coins) => [...coins, newCoin]);
 
   useEffect(() => {
-    const socket = socketClient('http://localhost:30002');
+    const socket = socketClient('http://localhost:3001');
     socket.on("message-from-server", ({payload}) => {
       if (payload) {
         const { message } = payload;
         const data = JSON.parse(message);
-        let coins: Array<Coin> = [];
-        coins.push({
+        // let coins: Array<Coin> = [];
+        let coin : Coin = {
           rank: data.rank,
           name: data.name,
           price: data.price,
-          sparkLine: [],
+          sparkline: data.sparkline,
           iconUrl: "",
           change: data.change,
           symbol: data.symbol,
-        });
-        setCoins(coins);
+        }
+        // coins.push(coin);
+        // addCoin(coin)
       }
     });
   }, []);
-
-  console.log(coins);
   const { children } = child;
   return (
     <WebSocketContext.Provider value={{ coins, addCoin }}>

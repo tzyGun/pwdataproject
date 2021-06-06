@@ -9,7 +9,7 @@ export default class MockData {
             rank: 1,
             price: 10,
             name: "bitcoin",
-            sparkLine: parseSparkLine(MockData.getMockSparkLines()),
+            sparkline: parseSparkLine(MockData.getMockSparkLines()),
             iconUrl: 'https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg',
             symbol: 'BTC',
             change: -2.93232

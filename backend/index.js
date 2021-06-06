@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var express = require("express");
 var http = require("http");
 var dotenv = require("dotenv");
@@ -44,7 +44,7 @@ var kafkajs_1 = require("kafkajs");
 var app = express();
 var config = dotenv.config();
 var kafka = new kafkajs_1.Kafka({
-    brokers: [process.env.KAFKA_BOOTSTRAP_SERVER],
+    brokers: [process.env.KAFKA_BOOTSTRAP_SERVER]
 });
 var consumer = kafka.consumer({
     groupId: process.env.GROUP_ID
@@ -87,12 +87,14 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 var payload;
                                 var _b;
                                 return __generator(this, function (_c) {
+                                    console.log('elo');
                                     payload = {
                                         topic: topic,
                                         partition: partition,
                                         key: (_b = message.value) === null || _b === void 0 ? void 0 : _b.toString(),
                                         message: message.value.toString()
                                     };
+                                    console.info("Received message from kafka topic: " + topic + ", partition " + partition + ", key: " + payload.key + ", message: \n " + payload.message);
                                     if (socketConnected) {
                                         socketSessionInstance.emit('message-from-server', {
                                             payload: payload
@@ -109,7 +111,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
         }
     });
 }); };
-main().catch(function (error) { return __awaiter(void 0, void 0, void 0, function () {
+main()["catch"](function (error) { return __awaiter(void 0, void 0, void 0, function () {
     var e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -141,6 +143,6 @@ app.use(express.static(path.join(__dirname, "public")));
 var io = require('socket.io')(server, {
     serveClient: true,
     cors: {
-        origin: '*',
+        origin: '*'
     }
 });

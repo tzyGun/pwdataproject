@@ -42,12 +42,14 @@ const main = async () => {
 
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
+            console.log('elo')
             const payload = {
                 topic,
                 partition,
                 key: message.value?.toString(),
                 message: message.value!.toString()
             }
+            console.info(`Received message from kafka topic: ${topic}, partition ${partition}, key: ${payload.key}, message: \n ${payload.message}`);
             if (socketConnected) {
                 socketSessionInstance.emit('message-from-server', {
                     payload

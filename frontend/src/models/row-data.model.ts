@@ -8,7 +8,7 @@ export interface Coin {
     rank: Number;
     name: string;
     price: Number;
-    sparkLine: Array<number>
+    sparkline: Array<number>
     iconUrl: string;
     symbol: string;
     change: number;

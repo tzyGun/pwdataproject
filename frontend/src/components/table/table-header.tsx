@@ -6,7 +6,8 @@ const TableHeader = () => {
       <tr>
         <th>Rank</th>
         <th>CryptoCurrency</th>
-        <th>Market Cap</th>
+        <th>Price</th>
+        <th>Change</th>
         <th>24H</th>
       </tr>
     </thead>
