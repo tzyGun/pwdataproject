@@ -1,0 +1,3 @@
+CREATE KEYSPACE coins WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1 };
+CREATE TABLE coins_assets (uuid text, name text, symbol text, coinRankingUrl text, color text, iconUrl text, PRIMARY KEY(uuid));
+CREATE TABLE coins_historical ( uuid text, name text, change text, price text, btcprice text, dailyvolume text, marketcap text, tier text);
