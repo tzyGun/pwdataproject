@@ -1,12 +1,12 @@
 import "./App.css";
 import React from "react";
-import Table from "./components/table/table";
+import Table from "./components/table/table-state";
 import Header from "./components/header/header";
 
 function App() {
   return (
     <main className="App bg-gradient-to-b from-blue-500 to-grey-200 app-main">
-      <Header />
+      <Header/>
       <Table />
     </main>
   );

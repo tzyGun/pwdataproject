@@ -1,13 +1,9 @@
-import React from "react";
-// import logo from "../../assets/food-onion.svg";
-import logo from "../../assets/papaj.jpeg";
+import logo from "../../assets/bitcoin_logo.svg";
 
 const Header = () => {
   return (
-    <header className="app-header">
-
+    <header className="app-header pt-10 pb-10">
       <img src={logo} className="App-logo" alt="logo" />
-      <p className="jezus">tak pan jezus powiedzial</p>
     </header>
   );
 };

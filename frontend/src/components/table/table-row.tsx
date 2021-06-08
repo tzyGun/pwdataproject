@@ -7,7 +7,6 @@ import SparkLine from '../sparkline/sparkline'
 type TableRowProps = { coin: Coin };
 
 const TableRow = (props: TableRowProps) => {
-  console.log(props)
   return (
     <tr>
       <td>{props.coin.rank}</td>

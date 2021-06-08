@@ -4,6 +4,7 @@ export interface RowData {
 
 
 export interface Coin {
+    uuid?: String,
     volume24h?: number;
     rank: Number;
     name: string;

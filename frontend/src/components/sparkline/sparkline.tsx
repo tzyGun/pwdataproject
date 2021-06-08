@@ -5,7 +5,6 @@ import { Sparklines, SparklinesLine } from "react-sparklines";
 type SparkLineProps = { coin: Coin };
 
 const SparkLine = (props: SparkLineProps) => {
-  console.log(props)
   return (
     <Sparklines data={props.coin.sparkline}>
       <SparklinesLine color="blue" />
