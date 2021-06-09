@@ -20,7 +20,7 @@ export default class Table extends Component<any, TableState> {
   coinsTemp: Array<Coin> = new Array<Coin>();
 
   componentDidMount() {
-    const socket = socketClient("http://localhost:3001");
+    const socket = socketClient("http://localhost:30001");
     socket.on("message-from-server", ({ payload }) => {
       if (payload) {
         const { message } = payload;
