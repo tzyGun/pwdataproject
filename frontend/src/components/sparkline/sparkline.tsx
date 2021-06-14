@@ -6,7 +6,7 @@ type SparkLineProps = { coin: Coin };
 
 const SparkLine = (props: SparkLineProps) => {
   return (
-    <Sparklines data={props.coin.sparkLine}>
+    <Sparklines data={props.coin.sparkline}>
       <SparklinesLine color="blue" />
     </Sparklines>
   );

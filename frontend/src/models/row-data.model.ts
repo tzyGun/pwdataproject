@@ -1,14 +1,16 @@
-import { StringMappingType } from "typescript";
-
 export interface RowData {
     coins: Array<Coin>;
 }
 
 
 export interface Coin {
+    uuid?: String,
+    volume24h?: number;
     rank: Number;
     name: string;
-    amount: Number;
-    sparkLine: Array<number>
-    coinIconUrl: string;
+    price: Number;
+    sparkline: Array<number>
+    iconUrl: string;
+    symbol: string;
+    change: number;
 }
